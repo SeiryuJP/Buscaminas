@@ -1,1 +1,1 @@
-# Buscaminas modalidad de 1 jugador
+# Buscaminas servicio web
