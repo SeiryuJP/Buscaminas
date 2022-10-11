@@ -3,10 +3,9 @@
     header("Content-Type:application/json");
 
     $size = 10;
-    $mines = 4;
+    $mines = 3;
 
     $field = new Field($size);
     $field->putMines($mines);
-    $field->putNumbers();
 
     echo json_encode($field);
