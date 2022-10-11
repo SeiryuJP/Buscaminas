@@ -13,12 +13,24 @@
         }
     
         public function putMines($numberMines){
-            $count = 0;
-            while ($count < $numberMines){
-                $count++;
-                $position = rand(0, count($this->field)-1);
-                $this->field[$position] = '*';
+            if ($numberMines > $this->size || $numberMines < 1){
+                return false;
             }
+            else {
+                $count = 0;
+                while ($count < $numberMines){
+                    $count++;
+                    $position = rand(0, count($this->field)-1);
+                    if ($this->field[$position] === '*'){
+                        while ($this->field[$position] === '*'){
+                            $position = rand(0, count($this->field)-1);
+                        }
+                    }
+                    $this->field[$position] = '*';
+                }
+                $this->putNumbers();
+                return true;
+            } 
         }
     
         public function putNumbers(){
