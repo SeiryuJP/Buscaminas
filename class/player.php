@@ -6,7 +6,7 @@
         public $wins;
         public $losses;
 
-        public function __contruct($id, $name, $password, $wins, $losses){
+        public function __construct($id, $name, $password, $wins, $losses){
             $this->id = $id;
             $this->name = $name;
             $this->password = $password;
