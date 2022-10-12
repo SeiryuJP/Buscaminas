@@ -70,5 +70,23 @@
                 return false;
             }
         }
+
+        static function signUp($name, $password){
+            self::$query = "INSERT INTO ".Credentials::$tablePlayers." (Id, Name, Password, Wins, Losses) VALUES (?, ?, ?, ?, ?)";
+            self::startConnection();
+            $stmt = self::$connection->prepare(self::$query);
+            $id = '';
+            $wins = 0;
+            $losses = 0;
+            $stmt->bind_param("sssss", $id, $name, $password, $wins, $losses);
+            $stmt->execute();
+            if ($stmt->affected_rows){
+                return true;
+            }
+            else {
+                return false;
+            }
+            self::closeConnection();
+        }
     }
 ?>
