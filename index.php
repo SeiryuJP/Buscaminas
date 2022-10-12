@@ -1,11 +1,11 @@
 <?php
-    require_once 'class/field.php';
+    include_once 'class/field.php';
+    include_once 'connection/connection.php';
+
     header("Content-Type:application/json");
 
-    $size = 10;
-    $mines = 3;
+    
+    Connection::updatePlayer('prueba', 2, 2);
+    $user = Connection::getSpecificPlayer('prueba');
 
-    $field = new Field($size);
-    $field->putMines($mines);
-
-    echo json_encode($field);
+    echo json_encode($user);

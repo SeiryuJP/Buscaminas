@@ -1,13 +1,11 @@
 <?php
     class Player{
-        public $id;
         public $name;
         public $password;
         public $wins;
         public $losses;
 
-        public function __contruct($id, $name, $password, $wins, $losses){
-            $this->id = $id;
+        public function __construct($name, $password, $wins, $losses){
             $this->name = $name;
             $this->password = $password;
             $this->wins = $wins;
@@ -15,17 +13,7 @@
         }
 
         public function __toString(){
-            return 'Player {ID: '.$this->id.', Name: '.$this->name.', Password: '.$this->password.', Wins: '.$this->wins.', Losses: '.$this->losses.'}';
-        }
-
-        public function getId(){
-                return $this->id;
-        }
-
-        public function setId($id){
-                $this->id = $id;
-
-                return $this;
+            return 'Player {Name: '.$this->name.', Password: '.$this->password.', Wins: '.$this->wins.', Losses: '.$this->losses.'}';
         }
 
         public function getName(){
