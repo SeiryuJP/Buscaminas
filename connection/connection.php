@@ -26,7 +26,7 @@
             self::startConnection();
             if (self::$result = self::$connection->query(self::$query)){
                 while ($row = self::$result->fetch_assoc()){
-                    $player = new Player($row["Id"], $row["Name"], $row["Password"], $row["Wins"], $row["Losses"]);
+                    $player = new Player($row["Name"], $row["Password"], $row["Wins"], $row["Losses"]);
                     $playersArray[] = $player;
                 }
             }
@@ -35,15 +35,15 @@
             return $playersArray;
         }
 
-        static function getSpecificPlayer($id){
-            self::$query = "SELECT * FROM ".Credentials::$tablePlayers." WHERE Id = ?";
+        static function getSpecificPlayer($name){
+            self::$query = "SELECT * FROM ".Credentials::$tablePlayers." WHERE Name = ?";
             self::startConnection();
             $stmt = self::$connection->prepare(self::$query);
-            $stmt->bind_param("s", $id);
+            $stmt->bind_param("s", $name);
             $stmt->execute();
             self::$result = $stmt->get_result();
             while ($row = self::$result->fetch_assoc()){
-                $player = new Player($row["Id"], $row["Name"], $row["Password"], $row["Wins"], $row["Losses"]);
+                $player = new Player($row["Name"], $row["Password"], $row["Wins"], $row["Losses"]);
             }
             self::$result->free_result();
             self::closeConnection();
@@ -58,7 +58,7 @@
             $stmt->execute();
             self::$result = $stmt->get_result();
             while ($row = self::$result->fetch_assoc()){
-                $player = new Player($row["Id"], $row["Name"], $row["Password"], $row["Wins"], $row["Losses"]);
+                $player = new Player($row["Name"], $row["Password"], $row["Wins"], $row["Losses"]);
             }
             self::$result->free_result();
             self::closeConnection();
@@ -72,13 +72,12 @@
         }
 
         static function signUp($name, $password){
-            self::$query = "INSERT INTO ".Credentials::$tablePlayers." (Id, Name, Password, Wins, Losses) VALUES (?, ?, ?, ?, ?)";
+            self::$query = "INSERT INTO ".Credentials::$tablePlayers." (Name, Password, Wins, Losses) VALUES (?, ?, ?, ?, ?)";
             self::startConnection();
             $stmt = self::$connection->prepare(self::$query);
-            $id = '';
             $wins = 0;
             $losses = 0;
-            $stmt->bind_param("sssss", $id, $name, $password, $wins, $losses);
+            $stmt->bind_param("ssss", $name, $password, $wins, $losses);
             $stmt->execute();
             if ($stmt->affected_rows){
                 return true;

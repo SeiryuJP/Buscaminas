@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-10-2022 a las 14:41:16
+-- Tiempo de generación: 12-10-2022 a las 17:21:13
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 7.4.29
 
@@ -28,7 +28,6 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `players` (
-  `Id` int(20) NOT NULL,
   `Name` varchar(20) NOT NULL,
   `Password` varchar(20) NOT NULL,
   `Wins` varchar(20) NOT NULL,
@@ -39,8 +38,9 @@ CREATE TABLE `players` (
 -- Volcado de datos para la tabla `players`
 --
 
-INSERT INTO `players` (`Id`, `Name`, `Password`, `Wins`, `Losses`) VALUES
-(1, 'admin', '1234', '0', '0');
+INSERT INTO `players` (`Name`, `Password`, `Wins`, `Losses`) VALUES
+('admin', '1234', '0', '0'),
+('prueba', '7878', '0', '0');
 
 --
 -- Índices para tablas volcadas
@@ -50,17 +50,7 @@ INSERT INTO `players` (`Id`, `Name`, `Password`, `Wins`, `Losses`) VALUES
 -- Indices de la tabla `players`
 --
 ALTER TABLE `players`
-  ADD PRIMARY KEY (`Id`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `players`
---
-ALTER TABLE `players`
-  MODIFY `Id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  ADD PRIMARY KEY (`Name`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
