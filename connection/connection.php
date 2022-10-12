@@ -87,5 +87,21 @@
             }
             self::closeConnection();
         }
+
+        static function updatePlayer($name, $wins, $losses){
+            self::$query = "UPDATE ".Credentials::$tablePlayers ." SET Wins = ?, Losses = ? WHERE Name = ?";
+            self::startConnection();
+            $stmt = self::$connection->prepare(self::$query);
+            $stmt->bind_param("sss", $wins, $losses, $name);
+            $stmt->execute();
+            if ($stmt->affected_rows){
+                $edited = true;
+            }
+            else {
+                $edited = false;
+            }
+            self::closeConnection();
+            return $edited;
+        }
     }
 ?>

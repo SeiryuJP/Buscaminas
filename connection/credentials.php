@@ -5,6 +5,5 @@
         public static $passwd = '';
         public static $db = 'buscaminas';
         public static $tablePlayers = 'players';
-        public static $tableField = 'field';
     }
 ?>
