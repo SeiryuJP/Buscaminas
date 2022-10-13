@@ -22,6 +22,7 @@
                     'cod' => '200',
                     'field' => $_SESSION['hiddenField']
                 ];
+                $_SESSION['loseStatus'] = false;
             }
             elseif (empty($args[2])){
                 header("HTTP/1.1 202 Empty mines");
@@ -40,6 +41,7 @@
                     'cod' => '200',
                     'field' => $_SESSION['hiddenField']
                 ];
+                $_SESSION['loseStatus'] = false;
             }
             break;
 
@@ -56,22 +58,32 @@
                 ];
             }
             else {
-                $position = $args[1];
-                $_SESSION['hiddenField'][$position-1] = $field[$position-1];
-                if ($_SESSION['hiddenField'][$position-1] === '*'){
-                    header("HTTP/1.1 200 You lose");
-                    $message = [
-                        'cod' => '200',
-                        'field' => $_SESSION['hiddenField']
-                    ];
+                if (!$_SESSION['loseStatus']){
+                    $position = $args[1];
+                    $_SESSION['hiddenField'][$position-1] = $field[$position-1];
+                    if ($_SESSION['hiddenField'][$position-1] === '*'){
+                        header("HTTP/1.1 200 You lose");
+                        $message = [
+                            'cod' => '200',
+                            'field' => $_SESSION['hiddenField']
+                        ];
+                        $_SESSION['loseStatus'] = true;
+                    }
+                    else {
+                        header("HTTP/1.1 200 Mine avoided");
+                        $message = [
+                            'cod' => '200',
+                            'field' => $_SESSION['hiddenField']
+                        ];
+                    }
                 }
                 else {
-                    header("HTTP/1.1 200 Mine avoided");
+                    header("HTTP/1.1 200 New field needed");
                     $message = [
-                        'cod' => '200',
-                        'field' => $_SESSION['hiddenField']
+                        'cod' => '202',
+                        'desc' => 'create a new field'
                     ];
-                }
+                } 
             }
             break;
             
