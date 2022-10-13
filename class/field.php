@@ -71,4 +71,24 @@
                 }
             }
         }
+
+        public function getField(){
+                return $this->field;
+        }
+
+        public function setField($field){
+                $this->field = $field;
+
+                return $this;
+        }
+
+        public function getSize(){
+                return $this->size;
+        }
+ 
+        public function setSize($size){
+                $this->size = $size;
+
+                return $this;
+        }
     }
