@@ -22,7 +22,11 @@
                     'cod' => '200',
                     'field' => $_SESSION['hiddenField']
                 ];
+
+                $_SESSION['numberMines'] = 3;
+                $_SESSION['successCount'] = 0;
                 $_SESSION['loseStatus'] = false;
+                $_SESSION['winStatus'] = false;
             }
             elseif (empty($args[2])){
                 header("HTTP/1.1 202 Empty mines");
@@ -41,7 +45,11 @@
                     'cod' => '200',
                     'field' => $_SESSION['hiddenField']
                 ];
+
+                $_SESSION['numberMines'] = $args[2];
+                $_SESSION['successCount'] = 0;
                 $_SESSION['loseStatus'] = false;
+                $_SESSION['winStatus'] = false;
             }
             break;
 
@@ -58,18 +66,24 @@
                 ];
             }
             else {
-                if (!$_SESSION['loseStatus']){
+                if (!$_SESSION['loseStatus'] && !$_SESSION['winStatus']){
                     $position = $args[1];
                     $_SESSION['hiddenField'][$position-1] = $field[$position-1];
                     if ($_SESSION['hiddenField'][$position-1] === '*'){
+                        $_SESSION['loseStatus'] = true;
+                        
                         header("HTTP/1.1 200 You lose");
                         $message = [
                             'cod' => '200',
                             'field' => $_SESSION['hiddenField']
                         ];
-                        $_SESSION['loseStatus'] = true;
                     }
                     else {
+                        $_SESSION['successCount'] = $_SESSION['successCount'] + 1;
+                        if ($_SESSION['successCount'] === count($field) - $_SESSION['numberMines']){
+                            $_SESSION['winStatus'] = true;
+                        }
+
                         header("HTTP/1.1 200 Mine avoided");
                         $message = [
                             'cod' => '200',
