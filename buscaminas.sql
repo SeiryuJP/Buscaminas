@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `fields`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `fields` (
   `Name` varchar(50) NOT NULL,
+  `Size` varchar(20) NOT NULL,
   `Field_visible` varchar(100) NOT NULL,
   `Field_hidden` varchar(100) NOT NULL,
   PRIMARY KEY (`Name`)

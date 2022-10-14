@@ -113,7 +113,7 @@
             $stmt->execute();
             self::$result = $stmt->get_result();
             while ($row = self::$result->fetch_assoc()){
-                $field = new Field($row["Name"], $row["Field_visible"], $row["Field_hidden"]);
+                $field = new Field($row["Name"], $row['Size'], $row["Field_visible"], $row["Field_hidden"]);
             }
             self::$result->free_result();
             self::closeConnection();
