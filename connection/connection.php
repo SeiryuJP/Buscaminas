@@ -119,5 +119,27 @@
             self::closeConnection();
             return $field;
         }
+
+        static function createField($field){
+            self::$query = "INSERT INTO ".Credentials::$tableFields." (Name, Size, Field_visible, Field_hidden) VALUES (?, ?, ?, ?)";
+            self::startConnection();
+            $stmt = self::$connection->prepare(self::$query);
+            $user = $field->getName();
+            $size = $field->getSize();
+            $visibleField = $field->getVisibleField();
+            $visibleFieldString = implode(',', $visibleField);
+            $hiddenField = $field->getHiddenField();
+            $hiddenFieldString = implode(',', $hiddenField);
+            $stmt->bind_param("ssss", $user, $size, $visibleFieldString, $hiddenFieldString);
+            $stmt->execute();
+            if ($stmt->affected_rows){
+                return true;
+            }
+            else {
+                return false;
+            }
+            self::closeConnection();
+            return $field;
+        }
     }
 ?>

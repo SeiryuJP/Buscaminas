@@ -86,11 +86,11 @@
                 return $this;
         }
 
-        public function getField(){
+        public function getVisibleField(){
                 return $this->visibleField;
         }
 
-        public function setField($visibleField){
+        public function setVisibleField($visibleField){
                 $this->visibleField = $visibleField;
 
                 return $this;
