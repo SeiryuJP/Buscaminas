@@ -51,29 +51,8 @@
             return $player;
         }
 
-        static function login($name, $password){
-            self::$query = "SELECT * FROM ".Credentials::$tablePlayers." WHERE Name = ?";
-            self::startConnection();
-            $stmt = self::$connection->prepare(self::$query);
-            $stmt->bind_param("s", $name);
-            $stmt->execute();
-            self::$result = $stmt->get_result();
-            while ($row = self::$result->fetch_assoc()){
-                $player = new Player($row["Name"], $row["Password"], $row["Wins"], $row["Losses"]);
-            }
-            self::$result->free_result();
-            self::closeConnection();
-
-            if ($player->getPassword() === $password){
-                return $player;
-            }
-            else {
-                return false;
-            }
-        }
-
         static function signUp($name, $password){
-            self::$query = "INSERT INTO ".Credentials::$tablePlayers." (Name, Password, Wins, Losses) VALUES (?, ?, ?, ?, ?)";
+            self::$query = "INSERT INTO ".Credentials::$tablePlayers." (Name, Password, Wins, Losses) VALUES (?, ?, ?, ?)";
             self::startConnection();
             $stmt = self::$connection->prepare(self::$query);
             $wins = 0;

@@ -10,10 +10,11 @@
         case 'GET':
             $args = explode('/', $paths);
             unset($args[0]);
+            $content = file_get_contents('php://input');
+            $data = json_decode($content, true);
+            $user = $data['name'];
+
             if (count($args) === 1){
-                $content = file_get_contents('php://input');
-                $data = json_decode($content, true);
-                $user = $data['name'];
                 if (empty($args[1])){
                     header("HTTP/1.1 202 Invalid request");
                     $message = [
@@ -78,9 +79,6 @@
                     ];
                 }
                 else {
-                    $content = file_get_contents('php://input');
-                    $data = json_decode($content, true);
-                    $user = $data['name'];
                     $size = $args[1];
                     $mines = $args[2];
 
@@ -110,15 +108,8 @@
                     }
                 }
             }
-            else {
-                header("HTTP/1.1 202 Invalid request");
-                $message = [
-                    'cod' => '202',
-                    'desc' => 'Invalid number of arguments'
-                ];
-            }
             break;
-        
+
         default:
             header("HTTP/1.1 405 Invalid request");
             $message = [
