@@ -1,58 +1,77 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
+-- MariaDB dump 10.19  Distrib 10.4.24-MariaDB, for Win64 (AMD64)
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 12-10-2022 a las 17:21:13
--- Versión del servidor: 10.4.24-MariaDB
--- Versión de PHP: 7.4.29
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
+-- Host: localhost    Database: buscaminas
+-- ------------------------------------------------------
+-- Server version	10.4.24-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Base de datos: `buscaminas`
+-- Table structure for table `field`
 --
 
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `field`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `field` (
+  `name` varchar(50) NOT NULL,
+  `field_visible` varchar(100) NOT NULL,
+  `field_hidden` varchar(100) NOT NULL,
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Estructura de tabla para la tabla `players`
+-- Dumping data for table `field`
 --
 
+LOCK TABLES `field` WRITE;
+/*!40000 ALTER TABLE `field` DISABLE KEYS */;
+/*!40000 ALTER TABLE `field` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `players`
+--
+
+DROP TABLE IF EXISTS `players`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `players` (
   `Name` varchar(20) NOT NULL,
   `Password` varchar(20) NOT NULL,
   `Wins` varchar(20) NOT NULL,
-  `Losses` varchar(20) NOT NULL
+  `Losses` varchar(20) NOT NULL,
+  PRIMARY KEY (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Volcado de datos para la tabla `players`
+-- Dumping data for table `players`
 --
 
-INSERT INTO `players` (`Name`, `Password`, `Wins`, `Losses`) VALUES
-('admin', '1234', '0', '0'),
-('prueba', '7878', '0', '0');
+LOCK TABLES `players` WRITE;
+/*!40000 ALTER TABLE `players` DISABLE KEYS */;
+INSERT INTO `players` VALUES ('admin','1234','0','0'),('prueba','7878','0','0');
+/*!40000 ALTER TABLE `players` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `players`
---
-ALTER TABLE `players`
-  ADD PRIMARY KEY (`Name`);
-COMMIT;
-
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2022-10-14 10:37:10
