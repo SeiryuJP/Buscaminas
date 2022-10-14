@@ -5,11 +5,11 @@
         public $size;
         public $hiddenField;
 
-        public function __construct($name, $size){
+        public function __construct($name, $size, $visibleField, $hiddenField){
             $this->name = $name;
-            $this->visibleField = array_fill(0, $size, '');
+            $this->visibleField = $visibleField;
             $this->size = $size;
-            $this->hiddenField = array_fill(0, $size, '');
+            $this->hiddenField = $hiddenField;
         }
 
         public function __toString(){

@@ -113,7 +113,11 @@
             $stmt->execute();
             self::$result = $stmt->get_result();
             while ($row = self::$result->fetch_assoc()){
-                $field = new Field($row["Name"], $row['Size'], $row["Field_visible"], $row["Field_hidden"]);
+                $visibleFieldString = $row['Field_visible'];
+                $visibleField = explode(',', $visibleFieldString);
+                $hiddenFieldString = $row['Field_hidden'];
+                $hiddenField = explode(',', $hiddenFieldString);
+                $field = new Field($row["Name"], $row['Size'], $visibleField, $hiddenField);
             }
             self::$result->free_result();
             self::closeConnection();
@@ -140,6 +144,25 @@
             }
             self::closeConnection();
             return $field;
+        }
+
+        static function updateField($field, $user){
+            self::$query = "UPDATE ".Credentials::$tableFields ." SET Field_visible = ?, Field_hidden = ? WHERE Name = ?";
+            self::startConnection();
+            $stmt = self::$connection->prepare(self::$query);
+            $visibleField = $field->getVisibleField();
+            $visibleFieldString = implode(',', $visibleField);
+            $hiddenField = $field->getHiddenField();
+            $hiddenFieldString = implode(',', $hiddenField);
+            $stmt->bind_param("sss", $visibleFieldString, $hiddenFieldString, $user);
+            $stmt->execute();
+            if ($stmt->affected_rows){
+                return true;
+            }
+            else {
+                return false;
+            }
+            self::closeConnection();
         }
     }
 ?>
