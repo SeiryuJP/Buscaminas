@@ -164,5 +164,25 @@
             }
             self::closeConnection();
         }
+
+        static function updateNewField($field, $user){
+            self::$query = "UPDATE ".Credentials::$tableFields ." SET Size = ?, Field_visible = ?, Field_hidden = ? WHERE Name = ?";
+            self::startConnection();
+            $stmt = self::$connection->prepare(self::$query);
+            $size = $field->getSize();
+            $visibleField = $field->getVisibleField();
+            $visibleFieldString = implode(',', $visibleField);
+            $hiddenField = $field->getHiddenField();
+            $hiddenFieldString = implode(',', $hiddenField);
+            $stmt->bind_param("ssss", $size, $visibleFieldString, $hiddenFieldString, $user);
+            $stmt->execute();
+            if ($stmt->affected_rows){
+                return true;
+            }
+            else {
+                return false;
+            }
+            self::closeConnection();
+        }
     }
 ?>

@@ -84,16 +84,30 @@
                     $size = $args[1];
                     $mines = $args[2];
 
-                    $field = new Field($user, $size, array_fill(0, $size, ''), array_fill(0, $size, ''));
-                    $field->putMines($mines);
-                    Connection::createField($field);
+                    if ($data['existing-field']){
+                        $field = new Field($user, $size, array_fill(0, $size, ''), array_fill(0, $size, ''));
+                        $field->putMines($mines);
+                        Connection::updateNewField($field, $user);
 
-                    header("HTTP/1.1 200 Field created");
-                    $message = [
-                        'cod' => '200',
-                        'desc' => 'Field created',
-                        'field' => $field
-                    ];
+                        header("HTTP/1.1 200 Field created");
+                        $message = [
+                            'cod' => '200',
+                            'desc' => 'Field created',
+                            'field' => $field
+                        ];
+                    }
+                    else {
+                        $field = new Field($user, $size, array_fill(0, $size, ''), array_fill(0, $size, ''));
+                        $field->putMines($mines);
+                        Connection::createField($field);
+    
+                        header("HTTP/1.1 200 Field created");
+                        $message = [
+                            'cod' => '200',
+                            'desc' => 'Field created',
+                            'field' => $field
+                        ];
+                    }
                 }
             }
             else {
