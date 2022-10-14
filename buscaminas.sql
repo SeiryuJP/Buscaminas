@@ -19,24 +19,24 @@
 -- Table structure for table `field`
 --
 
-DROP TABLE IF EXISTS `field`;
+DROP TABLE IF EXISTS `fields`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `field` (
-  `name` varchar(50) NOT NULL,
-  `field_visible` varchar(100) NOT NULL,
-  `field_hidden` varchar(100) NOT NULL,
-  PRIMARY KEY (`name`)
+CREATE TABLE `fields` (
+  `Name` varchar(50) NOT NULL,
+  `Field_visible` varchar(100) NOT NULL,
+  `Field_hidden` varchar(100) NOT NULL,
+  PRIMARY KEY (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `field`
+-- Dumping data for table `fields`
 --
 
-LOCK TABLES `field` WRITE;
-/*!40000 ALTER TABLE `field` DISABLE KEYS */;
-/*!40000 ALTER TABLE `field` ENABLE KEYS */;
+LOCK TABLES `fields` WRITE;
+/*!40000 ALTER TABLE `fields` DISABLE KEYS */;
+/*!40000 ALTER TABLE `fields` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

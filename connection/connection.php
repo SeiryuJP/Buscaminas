@@ -1,6 +1,7 @@
 <?php
     include_once 'credentials.php';
     include_once './class/player.php';
+    include_once './class/field.php';
 
     class Connection{
         private static $connection;
@@ -102,6 +103,21 @@
             }
             self::closeConnection();
             return $edited;
+        }
+
+        static function getSpecificField($name){
+            self::$query = "SELECT * FROM ".Credentials::$tableFields." WHERE Name = ?";
+            self::startConnection();
+            $stmt = self::$connection->prepare(self::$query);
+            $stmt->bind_param("s", $name);
+            $stmt->execute();
+            self::$result = $stmt->get_result();
+            while ($row = self::$result->fetch_assoc()){
+                $field = new Field($row["Name"], $row["Field_visible"], $row["Field_hidden"]);
+            }
+            self::$result->free_result();
+            self::closeConnection();
+            return $field;
         }
     }
 ?>
