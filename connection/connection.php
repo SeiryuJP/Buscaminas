@@ -36,15 +36,15 @@
             return $playersArray;
         }
 
-        static function getSpecificPlayer($name){
-            self::$query = "SELECT * FROM ".Credentials::$tablePlayers." WHERE Name = ?";
+        static function getSpecificPlayer($name, $password){
+            self::$query = "SELECT * FROM ".Credentials::$tablePlayers." WHERE Name = ? and Password = ?";
             self::startConnection();
             $stmt = self::$connection->prepare(self::$query);
-            $stmt->bind_param("s", $name);
+            $stmt->bind_param("ss", $name, $password);
             $stmt->execute();
             self::$result = $stmt->get_result();
             while ($row = self::$result->fetch_assoc()){
-                $player = new Player($row["Name"], $row["Password"], $row["Wins"], $row["Losses"]);
+                $player = new Player($row["Name"], '', $row["Wins"], $row["Losses"]);
             }
             self::$result->free_result();
             self::closeConnection();
@@ -68,11 +68,11 @@
             self::closeConnection();
         }
 
-        static function updatePlayer($name, $wins, $losses){
-            self::$query = "UPDATE ".Credentials::$tablePlayers ." SET Wins = ?, Losses = ? WHERE Name = ?";
+        static function updatePlayer($name, $password, $wins, $losses){
+            self::$query = "UPDATE ".Credentials::$tablePlayers ." SET Wins = ?, Losses = ? WHERE Name = ? and Password = ?";
             self::startConnection();
             $stmt = self::$connection->prepare(self::$query);
-            $stmt->bind_param("sss", $wins, $losses, $name);
+            $stmt->bind_param("ssss", $wins, $losses, $name, $password);
             $stmt->execute();
             if ($stmt->affected_rows){
                 $edited = true;

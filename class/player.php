@@ -1,7 +1,7 @@
 <?php
     class Player{
         public $name;
-        public $password;
+        private $password;
         public $wins;
         public $losses;
 
