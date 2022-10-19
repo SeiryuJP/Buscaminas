@@ -5,8 +5,6 @@
 
     class Connection{
         private static $connection;
-        private static $query;
-        private static $result;
 
         static function startConnection(){
             try {
@@ -23,38 +21,38 @@
         }
 
         static function getAllPlayers(){
-            self::$query = "SELECT * FROM " . Credentials::$tablePlayers;
+            $query = "SELECT * FROM " . Credentials::$tablePlayers;
             self::startConnection();
-            if (self::$result = self::$connection->query(self::$query)){
-                while ($row = self::$result->fetch_assoc()){
+            if ($result = self::$connection->query($query)){
+                while ($row = $result->fetch_assoc()){
                     $player = new Player($row["Name"], $row["Password"], $row["Wins"], $row["Losses"]);
                     $playersArray[] = $player;
                 }
             }
-            self::$result->free_result();
+            $result->free_result();
             self::closeConnection();
             return $playersArray;
         }
 
         static function getSpecificPlayer($name, $password){
-            self::$query = "SELECT * FROM ".Credentials::$tablePlayers." WHERE Name = ? and Password = ?";
+            $query = "SELECT * FROM ".Credentials::$tablePlayers." WHERE Name = ? and Password = ?";
             self::startConnection();
-            $stmt = self::$connection->prepare(self::$query);
+            $stmt = self::$connection->prepare($query);
             $stmt->bind_param("ss", $name, $password);
             $stmt->execute();
-            self::$result = $stmt->get_result();
-            while ($row = self::$result->fetch_assoc()){
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()){
                 $player = new Player($row["Name"], '', $row["Wins"], $row["Losses"]);
             }
-            self::$result->free_result();
+            $result->free_result();
             self::closeConnection();
             return $player;
         }
 
         static function signUp($name, $password){
-            self::$query = "INSERT INTO ".Credentials::$tablePlayers." (Name, Password, Wins, Losses) VALUES (?, ?, ?, ?)";
+            $query = "INSERT INTO ".Credentials::$tablePlayers." (Name, Password, Wins, Losses) VALUES (?, ?, ?, ?)";
             self::startConnection();
-            $stmt = self::$connection->prepare(self::$query);
+            $stmt = self::$connection->prepare($query);
             $wins = 0;
             $losses = 0;
             $stmt->bind_param("ssss", $name, $password, $wins, $losses);
@@ -69,9 +67,9 @@
         }
 
         static function updatePlayer($name, $password, $wins, $losses){
-            self::$query = "UPDATE ".Credentials::$tablePlayers ." SET Wins = ?, Losses = ? WHERE Name = ? and Password = ?";
+            $query = "UPDATE ".Credentials::$tablePlayers ." SET Wins = ?, Losses = ? WHERE Name = ? and Password = ?";
             self::startConnection();
-            $stmt = self::$connection->prepare(self::$query);
+            $stmt = self::$connection->prepare($query);
             $stmt->bind_param("ssss", $wins, $losses, $name, $password);
             $stmt->execute();
             if ($stmt->affected_rows){
@@ -85,28 +83,28 @@
         }
 
         static function getSpecificField($name){
-            self::$query = "SELECT * FROM ".Credentials::$tableFields." WHERE Name = ?";
+            $query = "SELECT * FROM ".Credentials::$tableFields." WHERE Name = ?";
             self::startConnection();
-            $stmt = self::$connection->prepare(self::$query);
+            $stmt = self::$connection->prepare($query);
             $stmt->bind_param("s", $name);
             $stmt->execute();
-            self::$result = $stmt->get_result();
-            while ($row = self::$result->fetch_assoc()){
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()){
                 $visibleFieldString = $row['Field_visible'];
                 $visibleField = explode(',', $visibleFieldString);
                 $hiddenFieldString = $row['Field_hidden'];
                 $hiddenField = explode(',', $hiddenFieldString);
                 $field = new Field($row["Name"], $row['Size'], $visibleField, $hiddenField);
             }
-            self::$result->free_result();
+            $result->free_result();
             self::closeConnection();
             return $field;
         }
 
         static function createField($field){
-            self::$query = "INSERT INTO ".Credentials::$tableFields." (Name, Size, Field_visible, Field_hidden) VALUES (?, ?, ?, ?)";
+            $query = "INSERT INTO ".Credentials::$tableFields." (Name, Size, Field_visible, Field_hidden) VALUES (?, ?, ?, ?)";
             self::startConnection();
-            $stmt = self::$connection->prepare(self::$query);
+            $stmt = self::$connection->prepare($query);
             $user = $field->getName();
             $size = $field->getSize();
             $visibleField = $field->getVisibleField();
@@ -126,9 +124,9 @@
         }
 
         static function updateField($field, $user){
-            self::$query = "UPDATE ".Credentials::$tableFields ." SET Field_visible = ?, Field_hidden = ? WHERE Name = ?";
+            $query = "UPDATE ".Credentials::$tableFields ." SET Field_visible = ?, Field_hidden = ? WHERE Name = ?";
             self::startConnection();
-            $stmt = self::$connection->prepare(self::$query);
+            $stmt = self::$connection->prepare($query);
             $visibleField = $field->getVisibleField();
             $visibleFieldString = implode(',', $visibleField);
             $hiddenField = $field->getHiddenField();
@@ -145,9 +143,9 @@
         }
 
         static function updateNewField($field, $user){
-            self::$query = "UPDATE ".Credentials::$tableFields ." SET Size = ?, Field_visible = ?, Field_hidden = ? WHERE Name = ?";
+            $query = "UPDATE ".Credentials::$tableFields ." SET Size = ?, Field_visible = ?, Field_hidden = ? WHERE Name = ?";
             self::startConnection();
-            $stmt = self::$connection->prepare(self::$query);
+            $stmt = self::$connection->prepare($query);
             $size = $field->getSize();
             $visibleField = $field->getVisibleField();
             $visibleFieldString = implode(',', $visibleField);
