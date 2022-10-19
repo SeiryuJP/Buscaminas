@@ -102,7 +102,7 @@
         }
 
         static function createField($field){
-            $query = "INSERT INTO ".Credentials::$tableFields." (Name, Size, Field_visible, Field_hidden) VALUES (?, ?, ?, ?)";
+            $query = "INSERT INTO ".Credentials::$tableFields." (Name, Size, Field_visible, Field_hidden, Finished) VALUES (?, ?, ?, ?, ?)";
             self::startConnection();
             $stmt = self::$connection->prepare($query);
             $user = $field->getName();
@@ -111,7 +111,8 @@
             $visibleFieldString = implode(',', $visibleField);
             $hiddenField = $field->getHiddenField();
             $hiddenFieldString = implode(',', $hiddenField);
-            $stmt->bind_param("ssss", $user, $size, $visibleFieldString, $hiddenFieldString);
+            $finished = $field->getFinished();
+            $stmt->bind_param("sssss", $user, $size, $visibleFieldString, $hiddenFieldString, $finished);
             $stmt->execute();
             if ($stmt->affected_rows){
                 return true;

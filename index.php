@@ -31,20 +31,7 @@
                     $field->setHiddenField($hiddenField);
                     Connection::updateField($field, $user);
 
-                    $count = 0;
-                    $mines = 0;
-                    for ($i = 0; $i < count($visibleField); $i++){
-                        if ($visibleField[$i] === '*'){
-                            $mines = $mines + 1;
-                        }
-                    } 
-                    for ($i = 0; $i < count($hiddenField); $i++){
-                        if ($hiddenField[$i] != '' && $hiddenField[$i] != '*'){
-                            $count = $count + 1;
-                        }
-                    }
-
-                    if ($visibleField[$args[1]-1] === '*'){
+                    if ($field->checkCondition($args[1]) === 'lose'){
                         header("HTTP/1.1 200 You lost");
                         $message = [
                             'cod' => '200',
@@ -52,7 +39,7 @@
                             'field' => $field
                         ];
                     }
-                    elseif ($count === count($hiddenField)-$mines){
+                    elseif ($field->checkCondition($args[1]) === 'win'){
                         header("HTTP/1.1 200 You win");
                         $message = [
                             'cod' => '200',
