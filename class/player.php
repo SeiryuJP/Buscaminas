@@ -4,12 +4,14 @@
         public $name;
         public $wins;
         public $losses;
+        public $verified;
 
-        public function __construct($id, $name, $wins, $losses){
+        public function __construct($id, $name, $wins, $losses, $verified){
             $this->id = $id;
             $this->name = $name;
             $this->wins = $wins;
             $this->losses = $losses;
+            $this->verified = $verified;
         }
 
         public function __toString(){
@@ -52,6 +54,16 @@
 
         public function setId($id){
                 $this->id = $id;
+
+                return $this;
+        }
+
+        public function getVerified(){
+                return $this->verified;
+        }
+
+        public function setVerified($verified){
+                $this->verified = $verified;
 
                 return $this;
         }
