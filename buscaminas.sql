@@ -1,78 +1,114 @@
--- MariaDB dump 10.19  Distrib 10.4.24-MariaDB, for Win64 (AMD64)
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: buscaminas
--- ------------------------------------------------------
--- Server version	10.4.24-MariaDB
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 20-10-2022 a las 18:46:37
+-- Versión del servidor: 10.4.24-MariaDB
+-- Versión de PHP: 7.4.29
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `field`
+-- Base de datos: `buscaminas`
 --
 
-DROP TABLE IF EXISTS `fields`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `fields`
+--
+
 CREATE TABLE `fields` (
-  `Name` varchar(50) NOT NULL,
+  `ID` int(11) NOT NULL,
+  `Id_Player` varchar(20) NOT NULL,
   `Size` varchar(20) NOT NULL,
   `Field_visible` varchar(100) NOT NULL,
   `Field_hidden` varchar(100) NOT NULL,
-  PRIMARY KEY (`Name`)
+  `Finished` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `fields`
+-- Volcado de datos para la tabla `fields`
 --
 
-LOCK TABLES `fields` WRITE;
-/*!40000 ALTER TABLE `fields` DISABLE KEYS */;
-/*!40000 ALTER TABLE `fields` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `fields` (`ID`, `Id_Player`, `Size`, `Field_visible`, `Field_hidden`, `Finished`) VALUES
+(10, '1234', '10', '*,1,0,1,*,2,*,*,1,0', '*,,,,,,,,,', 1),
+(11, '1234', '10', '1,*,1,1,*,1,0,0,0,0', '1,,1,1,*,,,,,', 1),
+(12, '1234', '10', '1,*,1,0,0,0,0,0,0,0', '1,*,,,,,,,,', 1),
+(13, '1234', '10', '0,0,1,*,1,0,0,0,0,0', '0,0,1,,1,0,0,0,0,0', 1),
+(14, '1234', '10', '1,*,1,0,0,0,0,1,*,1', '1,,1,0,0,0,0,1,,1', 1),
+(15, '1234', '5', '0,0,1,*,1', '0,0,1,,1', 1),
+(16, '1234', '3', '1,*,1', '1,,1', 1),
+(17, '1234', '10', '*,*,1,1,*,1,0,0,1,*', '*,,,,,,,,,', 1);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `players`
+-- Estructura de tabla para la tabla `players`
 --
 
-DROP TABLE IF EXISTS `players`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `players` (
+  `Id` varchar(20) NOT NULL,
   `Name` varchar(20) NOT NULL,
   `Password` varchar(20) NOT NULL,
   `Wins` varchar(20) NOT NULL,
-  `Losses` varchar(20) NOT NULL,
-  PRIMARY KEY (`Name`)
+  `Losses` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `players`
+-- Volcado de datos para la tabla `players`
 --
 
-LOCK TABLES `players` WRITE;
-/*!40000 ALTER TABLE `players` DISABLE KEYS */;
-INSERT INTO `players` VALUES ('admin','1234','0','0'),('prueba','7878','0','0');
-/*!40000 ALTER TABLE `players` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+INSERT INTO `players` (`Id`, `Name`, `Password`, `Wins`, `Losses`) VALUES
+('1234', 'probando', '1234', '1', '1');
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `fields`
+--
+ALTER TABLE `fields`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `Id_Player` (`Id_Player`);
+
+--
+-- Indices de la tabla `players`
+--
+ALTER TABLE `players`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `fields`
+--
+ALTER TABLE `fields`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `fields`
+--
+ALTER TABLE `fields`
+  ADD CONSTRAINT `fields_ibfk_1` FOREIGN KEY (`Id_Player`) REFERENCES `players` (`Id`);
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2022-10-14 10:37:10

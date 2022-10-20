@@ -1,15 +1,17 @@
 <?php
     class Field{
-        public $name;
+        public $playerId;
         public $visibleField;
         public $size;
         public $hiddenField;
+        public $finished;
 
-        public function __construct($name, $size, $visibleField, $hiddenField){
-            $this->name = $name;
+        public function __construct($playerId, $size, $visibleField, $hiddenField){
+            $this->playerId = $playerId;
             $this->visibleField = $visibleField;
             $this->size = $size;
             $this->hiddenField = $hiddenField;
+            $this->finished = false;
         }
 
         public function __toString(){
@@ -76,12 +78,45 @@
             }
         }
 
-        public function getName(){
-                return $this->name;
+        public function checkCondition($position){
+            $count = 0;
+            $mines = 0;
+
+            for ($i = 0; $i < count($this->visibleField); $i++){
+                if ($this->visibleField[$i] === '*'){
+                    $mines = $mines + 1;
+                }
+            } 
+            
+            for ($i = 0; $i < count($this->hiddenField); $i++){
+                if ($this->hiddenField[$i] != '' && $this->hiddenField[$i] != '*'){
+                    $count = $count + 1;
+                }
+            }
+
+            if ($this->visibleField[$position-1] === '*'){
+                $this->finished = true;
+                return 'lose';
+            }
+            elseif ($count === count($this->hiddenField)-$mines){
+                $this->finished = true;
+                return 'win';
+            }
+            else {
+                return 'alive';
+            }
         }
 
-        public function setName($name){
-                $this->name = $name;
+        public function uncover($position){
+            $this->hiddenField[$position] = $this->visibleField[$position];
+        }
+
+        public function getPlayerId(){
+                return $this->playerId;
+        }
+
+        public function setPlayerId($playerId){
+                $this->playerId = $playerId;
 
                 return $this;
         }
@@ -112,6 +147,16 @@
 
         public function setHiddenField($hiddenField){
                 $this->hiddenField = $hiddenField;
+
+                return $this;
+        }
+
+        public function getFinished(){
+            return $this->finished;
+        }
+
+        public function setFinished($finished){
+                $this->finished = $finished;
 
                 return $this;
         }
