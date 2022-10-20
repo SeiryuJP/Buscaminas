@@ -25,7 +25,7 @@
             self::startConnection();
             if ($result = self::$connection->query($query)){
                 while ($row = $result->fetch_assoc()){
-                    $player = new Player($row["Name"], $row["Password"], $row["Wins"], $row["Losses"]);
+                    $player = new Player($row["Name"], $row["Password"], $row["Wins"], $row["Losses"], $row['Verified'], $row['mail']);
                     $playersArray[] = $player;
                 }
             }
@@ -42,20 +42,48 @@
             $stmt->execute();
             $result = $stmt->get_result();
             while ($row = $result->fetch_assoc()){
-                $player = new Player($row["Id"], $row['Name'], $row["Wins"], $row["Losses"]);
+                if ($row['Verified'] === 0){
+                    $verified = false;
+                }
+                else {
+                    $verified = true;
+                }
+                $player = new Player($row["Id"], $row['Name'], $row["Wins"], $row["Losses"], $verified, $row['Mail']);
             }
             $result->free_result();
             self::closeConnection();
             return $player;
         }
 
-        static function signUp($id, $name, $password){
-            $query = "INSERT INTO ".Credentials::$tablePlayers." (Id, Name, Password, Wins, Losses) VALUES (?, ?, ?, ?, ?)";
+        static function getPlayerByMail($mail){
+            $query = "SELECT * FROM ".Credentials::$tablePlayers." WHERE Mail = ?";
+            self::startConnection();
+            $stmt = self::$connection->prepare($query);
+            $stmt->bind_param("s", $mail);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()){
+                if ($row['Verified'] === 0){
+                    $verified = false;
+                }
+                else {
+                    $verified = true;
+                }
+                $player = new Player($row["Id"], $row['Name'], $row["Wins"], $row["Losses"], $verified, $row['Mail']);
+            }
+            $result->free_result();
+            self::closeConnection();
+            return $player;
+        }
+
+        static function signUp($id, $name, $password, $mail){
+            $query = "INSERT INTO ".Credentials::$tablePlayers." (Id, Name, Password, Wins, Losses, Verified, Mail) VALUES (?, ?, ?, ?, ?, ?, ?)";
             self::startConnection();
             $stmt = self::$connection->prepare($query);
             $wins = 0;
             $losses = 0;
-            $stmt->bind_param("sssss", $id, $name, $password, $wins, $losses);
+            $verified = 0;
+            $stmt->bind_param("sssssss", $id, $name, $password, $wins, $losses, $verified, $mail);
             if ($stmt->execute()){
                 return true;
             }
@@ -70,6 +98,23 @@
             self::startConnection();
             $stmt = self::$connection->prepare($query);
             $stmt->bind_param("ssss", $wins, $losses, $id, $password);
+            $stmt->execute();
+            if ($stmt->affected_rows){
+                $edited = true;
+            }
+            else {
+                $edited = false;
+            }
+            self::closeConnection();
+            return $edited;
+        }
+
+        static function updateVerifiedStatus($mail){
+            $query = "UPDATE ".Credentials::$tablePlayers ." SET Verified = ? WHERE Mail = ?";
+            self::startConnection();
+            $stmt = self::$connection->prepare($query);
+            $verified = 1;
+            $stmt->bind_param("ss", $verified, $mail);
             $stmt->execute();
             if ($stmt->affected_rows){
                 $edited = true;

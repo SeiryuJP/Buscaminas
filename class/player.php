@@ -4,16 +4,24 @@
         public $name;
         public $wins;
         public $losses;
+        public $verified;
+        public $mail;
 
-        public function __construct($id, $name, $wins, $losses){
+        public function __construct($id, $name, $wins, $losses, $verified, $mail){
             $this->id = $id;
             $this->name = $name;
             $this->wins = $wins;
             $this->losses = $losses;
+            $this->verified = $verified;
+            $this->mail = $mail;
         }
 
         public function __toString(){
             return 'Player {Name: '.$this->name.', Password: '.$this->password.', Wins: '.$this->wins.', Losses: '.$this->losses.'}';
+        }
+
+        public function verifyMail(){
+            $this->verified = true;
         }
 
         public function getName(){
@@ -52,6 +60,26 @@
 
         public function setId($id){
                 $this->id = $id;
+
+                return $this;
+        }
+
+        public function getVerified(){
+                return $this->verified;
+        }
+
+        public function setVerified($verified){
+                $this->verified = $verified;
+
+                return $this;
+        }
+
+        public function getMail(){
+                return $this->mail;
+        }
+
+        public function setMail($mail){
+                $this->mail = $mail;
 
                 return $this;
         }
