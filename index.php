@@ -19,92 +19,102 @@
             $playerData = Connection::getSpecificPlayer($id, $password);
             $wins = $playerData->getWins();
             $losses = $playerData->getLosses();
+            $verified = $playerData->getVerified();
 
-            if (count($args) === 1){
-                if (empty($args[1])){
-                    header("HTTP/1.1 202 Invalid request");
-                    $message = [
-                        'cod' => '202',
-                        'desc' => 'Invalid number of arguments'
-                    ];
-                }
-                elseif (Connection::checkFinishedFields($id)) {
-                    $field = Connection::getSpecificField($id);
-                    $field->uncover($args[1]-1);
-
-                    if ($field->checkCondition($args[1]) === 'lose'){
-                        Connection::updateField($field, $id, $password);
-                        Connection::updatePlayer($id, $password, $wins, $losses + 1);
-                        header("HTTP/1.1 200 You lost");
-                        $message = [
-                            'cod' => '200',
-                            'desc' => 'You lost',
-                            'field' => $field
-                        ];
-                    }
-                    elseif ($field->checkCondition($args[1]) === 'win'){
-                        Connection::updateField($field, $id, $password);
-                        Connection::updatePlayer($id, $password, $wins + 1, $losses);
-                        header("HTTP/1.1 200 You win");
-                        $message = [
-                            'cod' => '200',
-                            'desc' => 'You win',
-                            'field' => $field
-                        ];
-                    }
-                    else{
-                        if (!Connection::updateField($field, $id, $password)){
-                            header("HTTP/1.1 202 Invalid Password");
-                            $message = [
-                                'cod' => '202',
-                                'desc' => 'Invalid Password',
-                            ];
-                        }
-                        header("HTTP/1.1 200 Still alive");
-                        $message = [
-                            'cod' => '200',
-                            'desc' => 'Still alive',
-                            'field' => $field
-                        ];
-                    }
-                }
-                else {
-                    header("HTTP/1.1 202 No active fields");
+            if (!$verified){
+                header("HTTP/1.1 401 User not verified");
+                $message = [
+                    'cod' => '401',
+                    'desc' => 'User not verified'
+                ];
+            }
+            else {
+                if (count($args) === 1){
+                    if (empty($args[1])){
+                        header("HTTP/1.1 202 Invalid request");
                         $message = [
                             'cod' => '202',
-                            'desc' => 'No active fields'
+                            'desc' => 'Invalid number of arguments'
                         ];
+                    }
+                    elseif (Connection::checkFinishedFields($id)) {
+                        $field = Connection::getSpecificField($id);
+                        $field->uncover($args[1]-1);
+    
+                        if ($field->checkCondition($args[1]) === 'lose'){
+                            Connection::updateField($field, $id, $password);
+                            Connection::updatePlayer($id, $password, $wins, $losses + 1);
+                            header("HTTP/1.1 200 You lost");
+                            $message = [
+                                'cod' => '200',
+                                'desc' => 'You lost',
+                                'field' => $field
+                            ];
+                        }
+                        elseif ($field->checkCondition($args[1]) === 'win'){
+                            Connection::updateField($field, $id, $password);
+                            Connection::updatePlayer($id, $password, $wins + 1, $losses);
+                            header("HTTP/1.1 200 You win");
+                            $message = [
+                                'cod' => '200',
+                                'desc' => 'You win',
+                                'field' => $field
+                            ];
+                        }
+                        else{
+                            if (!Connection::updateField($field, $id, $password)){
+                                header("HTTP/1.1 202 Invalid Password");
+                                $message = [
+                                    'cod' => '202',
+                                    'desc' => 'Invalid Password',
+                                ];
+                            }
+                            header("HTTP/1.1 200 Still alive");
+                            $message = [
+                                'cod' => '200',
+                                'desc' => 'Still alive',
+                                'field' => $field
+                            ];
+                        }
+                    }
+                    else {
+                        header("HTTP/1.1 202 No active fields");
+                            $message = [
+                                'cod' => '202',
+                                'desc' => 'No active fields'
+                            ];
+                    }
                 }
-            }
-            elseif (count($args) === 2) {
-                if (empty($args[1]) || empty($args[2])){
-                    header("HTTP/1.1 202 Invalid request");
-                    $message = [
-                        'cod' => '202',
-                        'desc' => 'Invalid number of arguments'
-                    ];
-                }
-                elseif (!Connection::checkFinishedFields($id)) {
-                    $size = $args[1];
-                    $mines = $args[2];
-
-                    $field = new Field($id, $size, array_fill(0, $size, ''), array_fill(0, $size, ''));
-                    $field->putMines($mines);
-                    Connection::createField($field);
-
-                    header("HTTP/1.1 200 Field created");
-                    $message = [
-                        'cod' => '200',
-                        'desc' => 'Field created',
-                        'field' => $field
-                    ];
-                }
-                else {
-                    header("HTTP/1.1 202 There is an Active field");
-                    $message = [
-                        'cod' => '202',
-                        'desc' => 'There is an Active field'
-                    ];
+                elseif (count($args) === 2) {
+                    if (empty($args[1]) || empty($args[2])){
+                        header("HTTP/1.1 202 Invalid request");
+                        $message = [
+                            'cod' => '202',
+                            'desc' => 'Invalid number of arguments'
+                        ];
+                    }
+                    elseif (!Connection::checkFinishedFields($id)) {
+                        $size = $args[1];
+                        $mines = $args[2];
+    
+                        $field = new Field($id, $size, array_fill(0, $size, ''), array_fill(0, $size, ''));
+                        $field->putMines($mines);
+                        Connection::createField($field);
+    
+                        header("HTTP/1.1 200 Field created");
+                        $message = [
+                            'cod' => '200',
+                            'desc' => 'Field created',
+                            'field' => $field
+                        ];
+                    }
+                    else {
+                        header("HTTP/1.1 202 There is an Active field");
+                        $message = [
+                            'cod' => '202',
+                            'desc' => 'There is an Active field'
+                        ];
+                    }
                 }
             }
             break;
