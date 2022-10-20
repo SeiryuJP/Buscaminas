@@ -1,13 +1,13 @@
 <?php
     class Field{
-        public $name;
+        public $playerId;
         public $visibleField;
         public $size;
         public $hiddenField;
         public $finished;
 
-        public function __construct($name, $size, $visibleField, $hiddenField){
-            $this->name = $name;
+        public function __construct($playerId, $size, $visibleField, $hiddenField){
+            $this->playerId = $playerId;
             $this->visibleField = $visibleField;
             $this->size = $size;
             $this->hiddenField = $hiddenField;
@@ -107,12 +107,16 @@
             }
         }
 
-        public function getName(){
-                return $this->name;
+        public function uncover($position){
+            $this->hiddenField[$position] = $this->visibleField[$position];
         }
 
-        public function setName($name){
-                $this->name = $name;
+        public function getPlayerId(){
+                return $this->playerId;
+        }
+
+        public function setPlayerId($playerId){
+                $this->playerId = $playerId;
 
                 return $this;
         }

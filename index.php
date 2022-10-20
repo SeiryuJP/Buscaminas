@@ -12,7 +12,13 @@
             unset($args[0]);
             $content = file_get_contents('php://input');
             $data = json_decode($content, true);
+            $id = $data['id'];
             $user = $data['name'];
+            $password = $data['password'];
+
+            $playerData = Connection::getSpecificPlayer($id, $password);
+            $wins = $playerData->getWins();
+            $losses = $playerData->getLosses();
 
             if (count($args) === 1){
                 if (empty($args[1])){
@@ -22,16 +28,13 @@
                         'desc' => 'Invalid number of arguments'
                     ];
                 }
-                else {
-                    $field = Connection::getSpecificField($user);
-                    $visibleField = $field->getVisibleField();
-                    $hiddenField = $field->getHiddenField();
-                    $hiddenField[$args[1]-1] = $visibleField[$args[1]-1];
-
-                    $field->setHiddenField($hiddenField);
-                    Connection::updateField($field, $user);
+                elseif (Connection::checkFinishedFields($id)) {
+                    $field = Connection::getSpecificField($id);
+                    $field->uncover($args[1]-1);
 
                     if ($field->checkCondition($args[1]) === 'lose'){
+                        Connection::updateField($field, $id, $password);
+                        Connection::updatePlayer($id, $password, $wins, $losses + 1);
                         header("HTTP/1.1 200 You lost");
                         $message = [
                             'cod' => '200',
@@ -40,6 +43,8 @@
                         ];
                     }
                     elseif ($field->checkCondition($args[1]) === 'win'){
+                        Connection::updateField($field, $id, $password);
+                        Connection::updatePlayer($id, $password, $wins + 1, $losses);
                         header("HTTP/1.1 200 You win");
                         $message = [
                             'cod' => '200',
@@ -48,6 +53,13 @@
                         ];
                     }
                     else{
+                        if (!Connection::updateField($field, $id, $password)){
+                            header("HTTP/1.1 202 Invalid Password");
+                            $message = [
+                                'cod' => '202',
+                                'desc' => 'Invalid Password',
+                            ];
+                        }
                         header("HTTP/1.1 200 Still alive");
                         $message = [
                             'cod' => '200',
@@ -55,6 +67,13 @@
                             'field' => $field
                         ];
                     }
+                }
+                else {
+                    header("HTTP/1.1 202 No active fields");
+                        $message = [
+                            'cod' => '202',
+                            'desc' => 'No active fields'
+                        ];
                 }
             }
             elseif (count($args) === 2) {
@@ -65,35 +84,73 @@
                         'desc' => 'Invalid number of arguments'
                     ];
                 }
-                else {
+                elseif (!Connection::checkFinishedFields($id)) {
                     $size = $args[1];
                     $mines = $args[2];
 
-                    if ($data['existing-field']){
-                        $field = new Field($user, $size, array_fill(0, $size, ''), array_fill(0, $size, ''));
-                        $field->putMines($mines);
-                        Connection::updateNewField($field, $user);
+                    $field = new Field($id, $size, array_fill(0, $size, ''), array_fill(0, $size, ''));
+                    $field->putMines($mines);
+                    Connection::createField($field);
 
-                        header("HTTP/1.1 200 Field created");
-                        $message = [
-                            'cod' => '200',
-                            'desc' => 'Field created',
-                            'field' => $field
-                        ];
-                    }
-                    else {
-                        $field = new Field($user, $size, array_fill(0, $size, ''), array_fill(0, $size, ''));
-                        $field->putMines($mines);
-                        Connection::createField($field);
-    
-                        header("HTTP/1.1 200 Field created");
-                        $message = [
-                            'cod' => '200',
-                            'desc' => 'Field created',
-                            'field' => $field
-                        ];
-                    }
+                    header("HTTP/1.1 200 Field created");
+                    $message = [
+                        'cod' => '200',
+                        'desc' => 'Field created',
+                        'field' => $field
+                    ];
                 }
+                else {
+                    header("HTTP/1.1 202 There is an Active field");
+                    $message = [
+                        'cod' => '202',
+                        'desc' => 'There is an Active field'
+                    ];
+                }
+            }
+            break;
+        
+        case 'POST':
+            $content = file_get_contents('php://input');
+            $data = json_decode($content, true);
+            $id = $data['id'];
+            $user = $data['name'];
+            $password = $data['password'];
+
+            if (Connection::signUp($id, $user, $password)){
+                header("HTTP/1.1 200 User created");
+                $message = [
+                    'cod' => '200',
+                    'desc' => 'User created'
+                ];
+            }
+            else {
+                header("HTTP/1.1 202 User cannot be created");
+                $message = [
+                    'cod' => '202',
+                    'desc' => 'User cannot be created'
+                ];
+            }
+            break;
+
+        case 'DELETE':
+            $content = file_get_contents('php://input');
+            $data = json_decode($content, true);
+            $id = $data['id'];
+            $password = $data['password'];
+
+            if (Connection::deletePlayer($id, $password)){
+                header("HTTP/1.1 200 Player deleted");
+                $message = [
+                    'cod' => '200',
+                    'desc' => 'Player deleted'
+                ];
+            }
+            else {
+                header("HTTP/1.1 202 Cannot delete player");
+                $message = [
+                    'cod' => '202',
+                    'desc' => 'Cannot delete player'
+                ];
             }
             break;
 
