@@ -61,42 +61,51 @@
                             }
                             elseif (Connection::checkFinishedFields($id)) {
                                 $field = Connection::getSpecificField($id);
-                                $field->uncover($args[1]-1);
+                                if ($args[1] > $field->getSize()){
+                                    header("HTTP/1.1 202 Invalid position");
+                                    $message = [
+                                        'cod' => '202',
+                                        'desc' => 'Invalid position'
+                                    ];
+                                }
+                                else {
+                                    $field->uncover($args[1]-1);
             
-                                if ($field->checkCondition($args[1]) === 'lose'){
-                                    Connection::updateField($field, $id, $password);
-                                    Connection::updatePlayer($id, $password, $wins, $losses + 1);
-                                    header("HTTP/1.1 200 You lost");
-                                    $message = [
-                                        'cod' => '200',
-                                        'desc' => 'You lost',
-                                        'field' => $field
-                                    ];
-                                }
-                                elseif ($field->checkCondition($args[1]) === 'win'){
-                                    Connection::updateField($field, $id, $password);
-                                    Connection::updatePlayer($id, $password, $wins + 1, $losses);
-                                    header("HTTP/1.1 200 You win");
-                                    $message = [
-                                        'cod' => '200',
-                                        'desc' => 'You win',
-                                        'field' => $field
-                                    ];
-                                }
-                                else{
-                                    if (!Connection::updateField($field, $id, $password)){
-                                        header("HTTP/1.1 202 Invalid Password");
+                                    if ($field->checkCondition($args[1]) === 'lose'){
+                                        Connection::updateField($field, $id, $password);
+                                        Connection::updatePlayer($id, $password, $wins, $losses + 1);
+                                        header("HTTP/1.1 200 You lost");
                                         $message = [
-                                            'cod' => '202',
-                                            'desc' => 'Invalid Password',
+                                            'cod' => '200',
+                                            'desc' => 'You lost',
+                                            'field' => $field
                                         ];
                                     }
-                                    header("HTTP/1.1 200 Still alive");
-                                    $message = [
-                                        'cod' => '200',
-                                        'desc' => 'Still alive',
-                                        'field' => $field
-                                    ];
+                                    elseif ($field->checkCondition($args[1]) === 'win'){
+                                        Connection::updateField($field, $id, $password);
+                                        Connection::updatePlayer($id, $password, $wins + 1, $losses);
+                                        header("HTTP/1.1 200 You win");
+                                        $message = [
+                                            'cod' => '200',
+                                            'desc' => 'You win',
+                                            'field' => $field
+                                        ];
+                                    }
+                                    else{
+                                        if (!Connection::updateField($field, $id, $password)){
+                                            header("HTTP/1.1 202 Invalid Password");
+                                            $message = [
+                                                'cod' => '202',
+                                                'desc' => 'Invalid Password',
+                                            ];
+                                        }
+                                        header("HTTP/1.1 200 Still alive");
+                                        $message = [
+                                            'cod' => '200',
+                                            'desc' => 'Still alive',
+                                            'field' => $field
+                                        ];
+                                    }
                                 }
                             }
                             else {
