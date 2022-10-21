@@ -240,5 +240,21 @@
                 return false;
             }
         }
+
+        static function updatePassword($id, $password, $newPassword){
+            $query = "UPDATE ".Credentials::$tablePlayers ." SET Password = ? WHERE Id = ? and Password = ?";
+            self::startConnection();
+            $stmt = self::$connection->prepare($query);
+            $stmt->bind_param("sss", $newPassword, $id, $password);
+            $stmt->execute();
+            if ($stmt->affected_rows){
+                $edited = true;
+            }
+            else {
+                $edited = false;
+            }
+            self::closeConnection();
+            return $edited;
+        }
     }
 ?>

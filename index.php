@@ -175,8 +175,31 @@
             $content = file_get_contents('php://input');
             $data = json_decode($content, true);
 
-            
-            
+            $id = $args[1];
+            $password = $data['password'];
+            $newPassword = $data['newpassword'];
+
+            if ($password === $newPassword){
+                header("HTTP/1.1 200 Do not use the same password");
+                $message = [
+                    'cod' => '202',
+                    'desc' => 'Do not use the same password'
+                ];
+            }
+            elseif (Connection::updatePassword($id, $password, $newPassword)){
+                header("HTTP/1.1 200 Password edited");
+                $message = [
+                    'cod' => '200',
+                    'desc' => 'Password edited'
+                ];
+            }
+            else {
+                header("HTTP/1.1 202 Placeholder error");
+                $message = [
+                    'cod' => '202',
+                    'desc' => 'Placeholder error'
+                ];
+            }
             break;
 
         case 'DELETE':
