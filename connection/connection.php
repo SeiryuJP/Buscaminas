@@ -35,6 +35,7 @@
         }
 
         static function getSpecificPlayer($id, $password){
+            $player = null;
             $query = "SELECT * FROM ".Credentials::$tablePlayers." WHERE Id = ? and Password = ?";
             self::startConnection();
             $stmt = self::$connection->prepare($query);
@@ -84,13 +85,13 @@
             $losses = 0;
             $verified = 0;
             $stmt->bind_param("sssssss", $id, $name, $password, $wins, $losses, $verified, $mail);
+            self::closeConnection();
             if ($stmt->execute()){
                 return true;
             }
             else {
                 return false;
             }
-            self::closeConnection();
         }
 
         static function updatePlayer($id, $password, $wins, $losses){
@@ -99,13 +100,13 @@
             $stmt = self::$connection->prepare($query);
             $stmt->bind_param("ssss", $wins, $losses, $id, $password);
             $stmt->execute();
+            self::closeConnection();
             if ($stmt->affected_rows){
                 $edited = true;
             }
             else {
                 $edited = false;
             }
-            self::closeConnection();
             return $edited;
         }
 
@@ -170,13 +171,13 @@
             }
             $stmt->bind_param("sssss", $id, $size, $visibleFieldString, $hiddenFieldString, $finished);
             $stmt->execute();
+            self::closeConnection();
             if ($stmt->affected_rows){
                 return true;
             }
             else {
                 return false;
             }
-            self::closeConnection();
             return $field;
         }
 
@@ -198,13 +199,13 @@
             }
             $stmt->bind_param("ssssss", $visibleFieldString, $hiddenFieldString, $finish, $id, $password, $finished);
             $stmt->execute();
+            self::closeConnection();
             if ($stmt->affected_rows){
                 return true;
             }
             else {
                 return false;
             }
-            self::closeConnection();
         }
 
         static function checkFinishedFields($playerID){
@@ -216,13 +217,13 @@
             $stmt->execute();
             $stmt->store_result();
             $result = $stmt->num_rows;
+            self::closeConnection();
             if ($result === 0){
                 return false;
             }
             else {
                 return true;
             }
-            self::closeConnection();
         }
 
         static function deletePlayer($id, $password) {
@@ -231,13 +232,13 @@
             $stmt = self::$connection->prepare($query);
             $stmt->bind_param("ss", $id, $password);
             $stmt->execute();
+            self::closeConnection();
             if ($stmt->affected_rows){
                 return true;
             }
             else {
                 return false;
             }
-            self::closeConnection();
         }
     }
 ?>
