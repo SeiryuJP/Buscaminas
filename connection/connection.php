@@ -85,11 +85,12 @@
             $losses = 0;
             $verified = 0;
             $stmt->bind_param("sssssss", $id, $name, $password, $wins, $losses, $verified, $mail);
-            self::closeConnection();
             if ($stmt->execute()){
+                self::closeConnection();
                 return true;
             }
             else {
+                self::closeConnection();
                 return false;
             }
         }
